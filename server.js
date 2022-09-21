@@ -9,7 +9,7 @@ const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
 
-const initializePassport = require("./password-config");
+const initializePassport = require("./passport-config");
 initializePassport(passport, (email) => {
   return users.find((user) => user.email === email);
 });
