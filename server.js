@@ -10,9 +10,15 @@ const flash = require("express-flash");
 const session = require("express-session");
 
 const initializePassport = require("./passport-config");
-initializePassport(passport, (email) => {
-  return users.find((user) => user.email === email);
-});
+initializePassport(
+  passport,
+  (email) => {
+    return users.find((user) => user.email === email);
+  },
+  (id) => {
+    return users.find((user) => user.id === id);
+  }
+);
 
 const app = express();
 
@@ -33,7 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/", (req, res) => {
-  res.render("index.ejs");
+  res.render("index.ejs", { name: req.user.name });
 });
 
 app.get("/login", (req, res) => {
