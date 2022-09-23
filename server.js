@@ -8,6 +8,7 @@ const { v4 } = require("uuid");
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
+const methodOverride = require("method-override");
 
 const initializePassport = require("./passport-config");
 initializePassport(
@@ -37,6 +38,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride("_method"));
 
 app.get("/", checkAuthenticated, (req, res) => {
   res.render("index.ejs", { name: req.user.name });
@@ -76,6 +78,13 @@ app.post("/register", checkNotAuthenticated, async (req, res) => {
   } catch (e) {
     res.redirect("/register");
   }
+});
+
+app.delete("/logout", (req, res) => {
+  req.logOut(false, () => {
+    console.log("logout");
+  });
+  res.redirect("/login");
 });
 
 function checkAuthenticated(req, res, next) {
